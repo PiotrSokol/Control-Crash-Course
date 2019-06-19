@@ -1,13 +1,15 @@
+%!TeX spellcheck = en-US
 \documentclass{beamer}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
 \usepackage{amsthm}
-\usepackage{algorithm}
-\usepackage{algorithmic}
+% \usepackage{algorithm}
+% \usepackage{algorithmic}
+\input{header}
 %% Sets page size and margins
 %\usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
-\DeclareMathOperator*{\argmax}{arg\,max}
-\DeclareMathOperator*{\argmin}{arg\,min}
+% \DeclareMathOperator*{\argmax}{arg\,max}
+% \DeclareMathOperator*{\argmin}{arg\,min}
 % \DeclareMathOperator*{\max}{max}
 % \DeclareMathOperator*{\min}{min}
 \usepackage{graphicx}
@@ -33,14 +35,14 @@
         \item We will frequently work with the function space $V = \mathcal{C}^k([a,b], \mathbb{R}^n)$ whose elements are k-times differentiable.
         \item The two norms that we will be focusing on are
         \begin{itemize}
-            \item 0-norm: 
+            \item 0-norm:
             \begin{equation}
                 \Vert y \Vert_0 = \max_{a \leq x \leq b} \vert y(x) \vert
             \end{equation}
             $y \in V$ and $\vert \cdot \vert$ is just the euclidean norm.
-            \item 1-norm: 
+            \item 1-norm:
             \begin{equation}
-                \Vert y \Vert_1 = \max_{a \leq x \leq b} \vert y(x) \vert + \max_{a \leq x \leq b} \vert y'(x) \vert 
+                \Vert y \Vert_1 = \max_{a \leq x \leq b} \vert y(x) \vert + \max_{a \leq x \leq b} \vert y'(x) \vert
             \end{equation}
             $y \in V$ and $\vert \cdot \vert$ is just the euclidean norm.
         \end{itemize}
@@ -102,9 +104,542 @@
 \end{frame}
 
 \begin{frame}{Weak and Strong Extrema}
-\begin{figure}
+    \begin{figure}
         \centering
         \includegraphics[width=\linewidth]{ch2/fig7.png}
     \end{figure}
+
+    \begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{ch2/fig8.png}
+    \end{figure}
 \end{frame}
+
+\begin{frame}{First-order necessary conditions for weak extrema}
+    \begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{ch2/fig9.png}
+    \end{figure}
+    Notation: $L_x, L_y, L_z, L_{xx}, L_{xy},$ etc. are the partial derivatives of the Lagrangian $L = L(x, y, z)$.
+\end{frame}
+
+\begin{frame}{Euler-Lagrange equation}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.9\linewidth]{ch2/fig10.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Euler-Lagrange equation}
+    \begin{itemize}
+        \item The first variation, $\delta J\vert_y$ was defined via
+        \begin{equation}
+            J(y + \alpha \eta) = J(y) + \delta J\vert_y(\eta) \alpha + o(\alpha)
+        \end{equation}
+        We want to leverage the specific form of $J$ to get an explicit expression for $\delta J\vert_y$.
+        \item We know that
+        \begin{equation}
+            J(y + \alpha \eta) = \int_a^b L(x, y(x) + \alpha \eta(x), y'(x) + \alpha \eta'(x))dx
+        \end{equation}
+        \item We can get the first order Taylor series of $J(y + \alpha \eta)$ wrt $\alpha$ around $\alpha=0$ by first taking the first order Taylor series of $L$ and then integrating it!
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Euler-Lagrange equation}
+    \begin{itemize}
+        \item The first-order Taylor series of $L$ is
+        \begin{align*}
+            L(x, y + \alpha \eta, y' + \alpha \eta') &= L(x, y, y') +\\
+            & \alpha (L_y(x, y, y')\eta + L_z(x, y, y')\eta') + o(\alpha)
+        \end{align*}
+        \item Integrating the above, we see that the first-order Taylor series of $J$ is
+        \begin{align*}
+            J(x, y + \alpha \eta, y' + \alpha \eta') &= \int_a^b [L(x, y, y') +\\
+            & \alpha (L_y(x, y, y')\eta + L_z(x, y, y')\eta') + o(\alpha)]dx
+        \end{align*}
+        \item Comparing the first-order Taylor series of $J$ and the definintion of first variation, we arrive at an explicit expression for $\delta J\vert_y$
+        \begin{equation*}
+            \delta J\vert_y (\eta) = \int_a^b [L_y(x, y, y')\eta + L_z(x, y, y')\eta']dx
+        \end{equation*}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Euler-Lagrange equation}
+\begin{itemize}
+    \item $\delta J \vert_y$ depends on both $\eta$ and $\eta'$. We can remove the dependence of $\eta'$ by using integration by parts
+    \begin{align*}
+        \delta J\vert_y (\eta) &= \int_a^b L_y(x, y, y')\eta dx + \int_a^b L_z(x, y, y')\eta'dx \\
+        &= \int_a^b L_y(x, y, y')\eta dx + \eta L_z(x, y, y')\vert_a^b \\
+        &- \int_a^b \eta \frac{d}{dx}L_z(x, y, y')dx \\
+        &= \int_a^b \eta[L_y(x, y, y') - \frac{d}{dx}L_z(x, y, y')] dx
+    \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Euler-Lagrange equation}
+\begin{itemize}
+    \item We know that if $y$ is a local extremum then $\delta J\vert_y=0$ for all admissible $\eta$.
+    \item This is true iff
+    \begin{equation*}
+        L_y(x, y, y') = \frac{d}{dx}L_z(x, y, y')   \quad (2.18)
+    \end{equation*}
+    where
+    \begin{equation*}
+        \frac{d}{dx}L_z(x, y, y') = L_{zx}(x, y, y') + L_{zy}(x, y, y')y' + L_{zz}(x, y, y')y'' \,\, (2.19)
+    \end{equation*}
+    \item This is the celebrated Euler-Lagrange equation providing the first-order necessary condition for optimality!
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Euler-Lagrange equation}
+    \begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{ch2/fig11.png}
+    \end{figure}
+
+    \begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{ch2/fig12.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Euler-Lagrange for multiple dimensions}
+    \begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{ch2/fig13.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Special cases of Euler-Lagrange}
+    \begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{ch2/fig14.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Special case 1 (no y)}
+    \begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{ch2/fig15.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Special case 2 (no x)}
+    \begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{ch2/fig16.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Variable-endpoint problem}
+    \begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{ch2/fig17.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Variable-endpoint problem}
+    \begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{ch2/fig18.png}
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}{Hamilton's canonical equations}
+    \begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{ch2/fig19.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Hamilton's canonical equations}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.9\linewidth]{ch2/fig20.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Principle of least action}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.9\linewidth]{ch2/fig21.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Principle of least action}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.9\linewidth]{ch2/fig22.png}
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}{Physical meaning of the Hamiltonian}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.9\linewidth]{ch2/fig23.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Conservation of energy}
+    \begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{ch2/fig24.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Conservation of momentum}
+    \begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{ch2/fig25.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Integral Constraints}
+    \begin{itemize}
+        \item The basic calculus of variations problem is augmented with a constraint of the form
+        \begin{equation}
+            C(y) = \int_a^b M(x, y, y')dx = C_0.
+        \end{equation}
+        \item We once again work with the family of perturbed curves $y + \alpha \eta$ but now for $\eta$ to be admissible $y+\alpha \eta$ has to satisfy the boundary conditions and the constraint i.e. $C(y + \alpha \eta) = C_0$ for $\alpha$ close to 0.
+        \item Satisfying the constraint implies that the first variation of $C$ is 0, $\delta C\vert_y(\eta) = 0.$
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Integral Constraints}
+    \begin{itemize}
+        \item Using the same calculations that we did for deriving Euler-Lagrange we get that
+        \begin{equation}
+            \int_a^b[M_y(x, y, y') - \frac{d}{dx}M_z(x, y, y')]\eta dx = 0.
+        \end{equation}
+        \item So our basic first-order necessary condition is
+        \begin{equation}
+            \int_a^b(L_y - \frac{d}{dx}L_z)\eta dx = 0 \quad \forall \eta \,\, \textrm{s.t.} \int_a^b(M_y - \frac{d}{dx}M_z)\eta dx = 0
+        \end{equation}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Integral Constraints}
+    \begin{itemize}
+         \item Similar to constrained finite-dimension optimization, we get that $\exists$ a constant $\lambda^*$ s.t.
+         \begin{equation}
+             (L_y - \frac{d}{dx}L_z) + \lambda^*(M_y - \frac{d}{dx}M_z)=0
+         \end{equation}
+         \item Rearranging terms we get
+         \begin{equation}
+             (L + \lambda^*M)_y = \frac{d}{dx}(L + \lambda^*M)_z
+         \end{equation}
+         which is the Euler-Lagrange equation for the augmented Lagrangian $L + \lambda^* M$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Integral Constraints}
+    \begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{ch2/fig26.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Non-integral Constraints}
+    \begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{ch2/fig27.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Loosening differentiability condtions}
+    In calculus of variations we wanted to optimize a smooth functional with
+    respect to a \(\mathcal{C}^1\) function. \\
+
+    However, real life problems are often non-smooth e.g:
+    \begin{itemize}
+        \item Elastic collisions
+        \item Refractions
+        \item Catenary touching the ground
+    \end{itemize}
+    Much like in convex optimization we want to be able to deal with functions that are differentiable almost everywhere.
+\end{frame}
+    \begin{frame}
+        \begin{figure}[!htb]
+            \centering
+            \includegraphics[width=0.95\textwidth]{img/Catenary.png}
+            \caption{Liberzon p. 72}
+            % \label{}
+        \end{figure}
+    \end{frame}
+    \begin{frame}
+        \begin{definition} [Piecewise \(\calC^1\) functions]
+            A function $y$ is piecewise \(\calC^1\) on \(\left[a,b\right]\) if it's $\calC^1$
+            everywhere except for a finite set of points where its derivative $y'$ is discontinuous.
+        \end{definition}
+        The points of discontinuity are called \emph{corner points}
+        \begin{definition}[Corner point $c$]
+            \(c \in \left[a,b\right]\) \\
+            and \\
+             \( y'(c^+) \defeq \lim_{x \searrow c} y'(x) \neq  y'(c^+) \defeq \lim_{x \nearrow c} y'(x)\)
+        \end{definition}
+    \end{frame}
+    \begin{frame}
+        \begin{example}
+            Consider the problem of minimizing the functional
+            \(J ( y ) = \int _ { - 1 } ^ { 1 } y ^ { 2 } ( x ) \left( y ^ { \prime } ( x ) - 1 \right)^ { 2 } d x
+            \)\\
+            s.t.
+            \(y ( - 1 ) = 0 , \,  y ( 1 ) = 1 \)
+        \end{example}
+
+         It is clear that $J ( y ) \geq 0$ for all curves $y .$ We can find $\mathcal { C } ^ { 1 }$ curves giving $g$
+        values of $J ( y )$ arbitrarily close to $0 ,$ but cannot achieve $J ( y ) = 0 .$ On the
+        other hand, the curve
+        \begin{equation*}
+            y ( x ) = \left\{ \begin{array} { l l } { 0 } & { \text { if } - 1 \leq x < 0 } \\ { x } & { \text { if } 0 \leq x \leq 1 } \end{array} \right.
+        \end{equation*}
+        gives $J ( y ) = 0 .$ This curve is piecewise $\mathcal { C } ^ { 1 }$ with a corner point at $x = 0$
+    \end{frame}
+    \begin{frame}
+        We need to generalize our notion of norms appropriately to handle functions with discontinuous derivatives the (\(\norm{\cdot}_0\) stays the same since it doesn't care about derivatives)
+        \begin{definition}[Generalized 1-norm]\label{def:gen1norm}
+            \begin{equation*}
+                \| y \| _ { 1 } : = \max _ { a \leq x \leq b } | y ( x ) | + \max _ { a \leq x \leq b } \max \left\{ \left| y ^ { \prime } \left( x ^ { - } \right) \right| , \left| y ^ { \prime } \left( x ^ { + } \right) \right| \right\}
+            \end{equation*}
+        \end{definition}
+        Functions satisfying the Euler-Lagrange conditions wrt to the Def~\ref{def:gen1norm} are \emph{extemals} or \emph{broken extremals}.
+    \end{frame}
+   \begin{frame}{(Additional) conditions for optimality}
+       Assume that $y$ has only corner point $c$ on \(\left[a,b\right]\).\\
+       \medskip
+       Further assume that  there are two \emph{separate} perturbations \(\eta_1,\eta_2\) acting on disjoint parts of \(y \quad y_1 \in \left[a,c\right], y_2 \in \left[c,b\right]\)\\ \medskip
+       The perturbed functions \(y_1,y_2\) are \(y_1 + \alpha \eta_1, \quad y_2 + \alpha \eta_2\)\\ \medskip
+       The boundary conditions on $y$ imply that like before the perturbations vanish at the endpoints $\eta_1(a)=\eta_2(b)=0$.\\\medskip
+   \end{frame}
+   \begin{frame}{(Additional) conditions for optimality cont.}
+       The corner point is not fixed therefore so we must consider the variation wrt. its location
+       \begin{equation*}
+           c + \alpha \Delta x
+       \end{equation*}
+       We now consider a family of curves \(y(\cdot, \alpha)\) with \(y(\cdot,0) = y\).\\ \medskip
+       As before we require that both \(\eta_1, \eta_2\) are $\calC^1$.
+   \end{frame}
+    \begin{frame}
+        \begin{figure}[!htb]
+        	\centering
+        	\includegraphics[width=0.95\textwidth]{img/extremalwtcorner.png}
+        	\caption{A perturbation of a extremal with a corner (Liberzon p 73)}
+        	% \label{}
+        \end{figure}
+    \end{frame}
+    \begin{frame}
+        Clearly from the previous figure and from the definition, \(y_1,y_2\) are only defined on disjoint segments of \(\left[a,b\right]\).\\\medskip
+        We need to define continuations of these functions.\\
+        For instance $y_1(x)$ all $x > c$ can be extended as $y_1(x) \defeq y(x) + y'(c^-)(x-c)$. Ditto for $y_2$. \\ \medskip
+    \end{frame}
+    \begin{frame}
+        Now the functional to be optimized is given as
+        \begin{equation*}
+            \begin{split}
+                 J ( y ) &= \int _ { a } ^ { b } L \left( x , y ( x ) , y ^ { \prime } ( x ) \right) d x  \\
+                  &= \int _ { a } ^ { c } L \left( x , y _ { 1 } ( x ) , y _ { 1 } ^ { \prime } ( x ) \right) d x + \int _ { c } ^ { b } L \left( x , y _ { 2 } ( x ) , y _ { 2 } ^ { \prime } ( x ) \right) d x \\
+                 &\defeq J _ { 1 } \left( y _ { 1 } \right) + J _ { 2 } \left( y _ { 2 } \right)
+            \end{split}
+        \end{equation*}
+    \end{frame}
+    \begin{frame}
+        Let's look at the two terms separately.\\
+        First
+        \begin{equation*}
+            J _ { 1 } \left( y _ { 1 } + \alpha \eta _ { 1 } \right) = \int _ { a } ^ { c + \alpha \Delta x } L \left( x , y _ { 1 } ( x ) + \alpha \eta _ { 1 } ( x ) , y _ { 1 } ^ { \prime } ( x ) + \alpha \eta _ { 1 } ^ { \prime } ( x ) \right) d x
+        \end{equation*}
+        which has an the following variation
+        \begin{equation*}
+            \begin{aligned} \delta J _ { 1 | y _ { 1 } } \left( \eta _ { 1 } \right) & = \left. \frac { d } { d \alpha } \right| _ { \alpha = 0 } J _ { 1 } \left( y _ { 1 } + \alpha \eta _ { 1 } \right) \\
+                & = \int _ { a } ^ { c }  L _ { y } \left( x , y _ { 1 } ( x ) , y _ { 1 } ^ { \prime } ( x ) \right) \eta _ { 1 } ( x ) \\
+                &+ L _ { y ^ { \prime } } \left( x , y _ { 1 } ( x ) , y _ { 1 } ^ { \prime } ( x ) \right) \eta _ { 1 } ^ { \prime } ( x )  d x  + L \left( c , y _ { 1 } ( c ) , y _ { 1 } ^ { \prime } ( c ) \right) \Delta x
+            \end{aligned}
+        \end{equation*}
+    \end{frame}
+    \begin{frame}
+        \begin{equation*}
+            \begin{split}
+                \delta \left. J _ { 1 } \right| _ { y _ { 1 } } \left( \eta _ { 1 } \right) = \int _ { a } ^ { c } L _ { y } \left( x , y _ { 1 } ( x ) , y _ { 1 } ^ { \prime } ( x ) \right) \eta _ { 1 } ( x ) - \\
+                - \frac { d } { d x } L _ { y ^ { \prime } } \left( x , y _ { 1 } ( x ) , y _ { 1 } ^ { \prime } ( x ) \right) \eta _ { 1 } ( x ) d x\\
+                + L _ { y ^ { \prime } } \left( c , y ( c ) , y ^ { \prime } \left( c ^ { - } \right) \right) \eta _ { 1 } ( c )\\
+                + L \left( c , y ( c ) , y ^ { \prime } \left( c ^ { - } \right) \right) \Delta x
+            \end{split}
+        \end{equation*}
+        Same derivation follows through for \(\delta J_2\vert_{y_2}(\eta_2)\)
+    \end{frame}
+    \begin{frame}
+        For sufficiently small $\alpha$ \(y(\cdot,\alpha)\) is close to $y(\cdot)$ in the 0-norm sense and so $J(y(\cdot,\alpha))$ attains a minimum at $\alpha=0$ which in turn implies that
+        \begin{equation*}
+            \delta \left. J _ { 1 } \right| _ { y _ { 1 } } \left( \eta _ { 1 } \right) + \delta \left. J _ { 2 } \right| _ { y _ { 2 } } \left( \eta _ { 2 } \right) = 0
+        \end{equation*}
+        which is equivalent to
+        \begin{equation*}
+            \begin{split}
+                L _ { y ^ { \prime } } \left( c , y ( c ) , y ^ { \prime } \left( c ^ { - } \right) \right) \eta _ { 1 } ( c ) - L _ { y ^ { \prime } } \left( c , y ( c ) , y ^ { \prime } \left( c ^ { + } \right) \right) \eta _ { 2 } ( c )\\
+                + L \left( c , y ( c ) , y ^ { \prime } \left( c ^ { - } \right) \right) \Delta x - L \left( c , y ( c ) , y ^ { \prime } \left( c ^ { + } \right) \right) \Delta x = 0
+            \end{split}
+        \end{equation*}
+    \end{frame}
+    \begin{frame}
+        Now we show that the Lagrangian of the perturbed curve $y$ is continuous at $x = c + \alpha \Delta x$
+        \begin{equation*}
+            \begin{split}
+                y _ { 1 } ( c + \alpha \Delta x ) + \alpha \eta _ { 1 } ( c + \alpha \Delta x ) = y _ { 2 } ( c + \alpha \Delta x ) + \alpha \eta _ { 2 } ( c + \alpha \Delta x ) \defeq \\                 \defeq y(c) + \alpha \Delta y + o(\alpha)
+            \end{split}
+        \end{equation*}
+        which is a constant $y(c)$ plus first-order terms in $\alpha$. We equate the first oder terms
+        \begin{equation*}
+        y ^ { \prime } \left( c ^ { - } \right) \Delta x + \eta _ { 1 } ( c ) = y ^ { \prime } \left( c ^ { + } \right) \Delta x + \eta _ { 2 } ( c ) = \Delta y
+        \end{equation*}
+    \end{frame}
+
+    \begin{frame}
+        \begin{figure}[!htb]
+            \centering
+            \includegraphics[width=0.95\textwidth]{img/extremalwtcorner.png}
+            \caption{A perturbation of a extremal with a corner (Liberzon p 73)}
+            % \label{}
+        \end{figure}
+    \end{frame}
+
+    \begin{frame}
+        Using the fact that the terms are
+        \begin{figure}[!htb]
+        	\centering
+        	\includegraphics[width=0.95\textwidth]{ch3/WEcorner.png}
+        	% \caption{}
+        	% \label{}
+        \end{figure}
+        $\Delta x $ and $\Delta y$ are independent and arbitrary so this can only hold if the Lagrangian terms multiplying them are zero and the Lagrangian is continuous at $x = c + \alpha \Delta x$.
+        \begin{theorem}{Weierstrass-Erdmann condition}
+            If $y$ is a strong extremum then $L_{y^\prime}$ and $y^{\prime}L_{y^\prime} - L$ must be continuous at each corner point
+        \end{theorem}
+    \end{frame}
+
+    \begin{frame}{Further conditions for strong optima}
+        We consider a first order Taylor expansion of the Lagrangian around a curve $w$
+        \begin{definition}[Weierstrass excess function]
+            \begin{equation*}
+                E ( x , y , z , w ) : = L ( x , y , w ) - L ( x , y , z ) - ( w - z ) \cdot L _ { z } ( x , y , z )
+            \end{equation*}
+        \end{definition}
+        The \emph{Weierstrass necessary condition for a strong minimum}  states
+        that if $y ( \cdot )$ is a strong minimum, then
+        \begin{equation*}
+        E \left( x , y ( x ) , y ^ { \prime } ( x ) , w \right) \geq 0
+        \end{equation*}
+        for all noncorner points $x \in [ a , b ]$ and all $w \in \mathbb { R }$
+    \end{frame}
+    \begin{frame}
+        \begin{figure}[!htb]
+            \centering
+            \includegraphics[width=0.95\textwidth]{ch3/Wexcess1.png}
+            \caption{Weierstrass excess function. A measure of local stationarity, analogous to f.d. optim.}
+            % \label{}
+        \end{figure}
+    \end{frame}
+    \begin{frame}{Proof of the Weierstrass Excess function}
+        Define a perturbation as
+        \scalebox{0.83}{
+            $y ( x , \varepsilon ) : = \left\{ \begin{array} { l l } { y ( x ) } & { \text { if } a \leq x \leq \overline { x } \text { or } d \leq x \leq b } \\ { y ( \overline { x } ) + w ( x - \overline { x } ) } & { \text { if } \overline { x } \leq x \leq \overline { x } + \varepsilon } \\ { y ( x ) + \frac { d - x } { d - ( \overline { x } + \varepsilon ) } ( y ( \overline { x } ) + w \varepsilon - y ( \overline { x } + \varepsilon ) ) } & { \text { if } \overline { x } + \varepsilon \leq x \leq d } \end{array} \right.$
+        }
+    \end{frame}
+    \begin{frame}
+        \begin{figure}[!htb]
+	\centering
+	\includegraphics[width=0.95\textwidth]{ch3/Wexcess2.png}
+	\caption{$y$ and $y(\cdot, \varepsilon)$}
+	% \label{}
+    \end{figure}
+    \end{frame}
+    \begin{frame}
+        $\begin{aligned} \frac { d } { d \varepsilon } J ( y ( \cdot , \varepsilon ) ) = \frac { d } { d \varepsilon } & \left( \int _ { \overline { x } } ^ { \overline { x } + \varepsilon } L \left( x , y ( x , \varepsilon ) , y _ { x } ( x , \varepsilon ) \right) d x \right.\\ & + \int _ { \overline { x } + \varepsilon } ^ { d } L \left( x , y ( x , \varepsilon ) , y _ { x } ( x , \varepsilon ) \right) d x ) \end{aligned}$
+        \\
+        Clearly,
+        $ \frac{d}{d\varepsilon} \int _ { \overline { x } } ^ { \overline { x } + \varepsilon } L ( x , y ( \overline { x } ) + w ( x - \overline { x } ) , w ) d x = L ( \overline { x } + \varepsilon , y ( \overline { x } ) + w \varepsilon , w )$
+    \end{frame}
+    \begin{frame}
+        Similarly, the second term in variation of the functional $J$ is
+        $ \frac{d}{d\varepsilon}
+        \int _ { \overline { x } + \varepsilon } ^ { d } L \left( x , y ( x , \varepsilon ) , y _ { x } ( x , \varepsilon ) \right) d x
+        $\\
+        which equals\\
+        \begin{figure}[!htb]
+	\centering
+	\includegraphics[width=0.95\textwidth]{ch3/Eq312.png}
+	% \caption{}
+	% \label{}
+    \end{figure}
+    \end{frame}
+    \begin{frame}
+        \begin{figure}[!htb]
+	\centering
+	\includegraphics[width=0.95\textwidth]{ch3/Eq313314.png}
+	% \caption{}
+	% \label{}
+    \end{figure}
+    \end{frame}
+    \begin{frame}
+        \begin{figure}[!htb]
+	\centering
+	\includegraphics[width=0.95\textwidth]{ch3/Eq315.png}
+	% \caption{}
+	% \label{}
+    \end{figure}
+    \end{frame}
+    \begin{frame}
+        \begin{figure}[!htb]
+	\centering
+	\includegraphics[width=0.95\textwidth]{ch3/Eq315b.png}
+    	% \caption{}
+    	% \label{}
+    \end{figure}
+    \end{frame}
+    \begin{frame}
+        \begin{figure}[!htb]
+	\centering
+	\includegraphics[width=0.95\textwidth]{ch3/Eq315c.png}
+	% \caption{}
+	% \label{}
+    \end{figure}
+    \end{frame}
+    \begin{frame}
+        Importantly we did not require the differentiability of $y$, but only used that $L$ be differentiable wrt. $y \textrm{and} y^{\prime}$.\\\medskip
+        Finally, let's see how this relates to the Hamiltonian maximization conditions from before. Let's write the Hamiltonian as
+        \begin{equation*}
+            H ( x , y , z , p ) = z p - L ( x , y , z )
+        \end{equation*}
+        \begin{figure}[!htb]
+	\centering
+	\includegraphics[width=0.95\textwidth]{ch3/HamiltonianThing.png}
+	% \caption{}
+	% \label{}
+    \end{figure}
+    \end{frame}
+    \begin{frame}{Finally, control!}
+        \begin{figure}[!htb]
+	\centering
+	\includegraphics[width=0.95\textwidth]{ch3/ControlDef.png}
+	% \caption{}
+	% \label{}
+    \end{figure}
+    \end{frame}
+    \begin{frame}{Cost functional}
+        \begin{figure}[!htb]
+	\centering
+	\includegraphics[width=0.95\textwidth]{ch3/CostFunctional.png}
+	% \caption{}
+	% \label{}
+    \end{figure}
+    \end{frame}
+    \begin{frame}
+        \begin{figure}[!htb]
+	\centering
+	\includegraphics[width=0.95\textwidth]{ch3/Cost2.png}
+	% \caption{}
+	% \label{}
+    \end{figure}
+    \end{frame}
 \end{document}
